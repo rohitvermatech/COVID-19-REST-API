@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask_restful import Api, Resource
 from flask_cors import CORS
 from component import get_covid, country
@@ -7,6 +7,11 @@ app = Flask(__name__)
 api = Api(app)
 CORS(app)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
+
+@app.route('/')
+def hello_world():
+    return render_template('index.html')
 
 
 class rest_api(Resource):
