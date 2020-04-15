@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import json
 
 
 def get_covid():
@@ -32,3 +33,29 @@ def country(country_name, Dict, countries):
         return Dict[country_name]
     else:
         return "no data found"
+
+
+def get_covid_ind():
+    url = "https://api.rootnet.in/covid19-in/unofficial/covid19india.org/statewise"
+    req = requests.get(url)
+    data = req.json()
+
+    state = []
+    state_data = {}
+
+    for i in data['data']['statewise']:
+        state.append(i['state'].lower())
+        state_data[i['state'].lower()] = {
+            "total": i['confirmed'],
+            "deaths": i['deaths'],
+            "recovered": i['recovered'],
+            "active": i['active'],
+        }
+    return state, state_data
+
+
+def get_state(state_name, state, state_data):
+    if state_name in state:
+        return state_data[state_name]
+    else:
+        return "no data found for this state"

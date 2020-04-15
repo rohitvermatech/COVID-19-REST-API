@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, render_template
 from flask_restful import Api, Resource
 from flask_cors import CORS
-from component import get_covid, country
+from component import get_covid, country, get_covid_ind, get_state
 
 app = Flask(__name__)
 api = Api(app)
@@ -25,8 +25,17 @@ class rest_api(Resource):
             return jsonify(country(country_name, Dict, countries))
 
 
+class ind_api(Resource):
+    def get(self, state_name):
+        state_data, state = get_covid_ind()
+        state_name = str(state_name)
+
+        return jsonify(get_state(state_name, state_data, state))
+
+
 api.add_resource(rest_api, "/world", endpoint="")
 api.add_resource(rest_api, "/<country_name>", endpoint="country")
+api.add_resource(ind_api, "/india/<state_name>", endpoint="state")
 
 if __name__ == "__main__":
     app.run()
